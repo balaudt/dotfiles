@@ -1,0 +1,32 @@
+set ignorecase
+set smartcase
+set diffopt+=iwhite,icase
+set number
+set nowrap
+set autoindent
+set clipboard=unnamedplus,unnamed
+set hlsearch
+set cursorline
+set laststatus=2
+set ruler
+set autoread
+set autochdir
+set surround
+syntax enable
+let mapleader = " "
+map <Leader>m vat<Esc>
+map <Leader>M vato<Esc>
+map gn :action MethodDown<cr>
+map gp :action MethodUp<cr>
+map <Leader>h :action LocalHistory.ShowHistory<cr>
+map <Leader>c :action Git.CompareWithBranch<cr>
+map <Leader>i :action ImportModule<cr>
+map <Leader>r :action Run<cr>
+map <Leader>d :action Debug<cr>
+map <Leader>R :action ChooseRunConfiguration<cr>
+map <Leader>D :action ChooseDebugConfiguration<cr>
+map <Leader>gd :action ActivateDatabaseToolWindow<cr>
+map <Leader>gc :action ActivateDatabaseConsoleToolWindow<cr>
+map <Leader>t :action Refactorings.QuickListPopupAction<cr>
+map co :ed 
+map cO :action CloseAllEditorsButActive<cr>

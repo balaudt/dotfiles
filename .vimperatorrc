@@ -1,0 +1,13 @@
+"3.16.0 (created: 2017/02/01 00:55:15)
+
+highlight Hint font-family: monospace; font-size: 10px; font-weight: bold; text-transform: uppercase; color: white; background-color: red; border-color: ButtonShadow; border-width: 0px; border-style: solid; padding: 0px 1px 0px 1px; font-size: 100%;
+map <C-w>s :emenu<Space>Tile.Tile<Space>New<Space>Tab.Below<Return>
+map <C-w>v :emenu<Space>Tile.Tile<Space>New<Space>Tab.Right<Return>
+map "\\t" :tabo<Return>
+set editor=/Users/balamurugan/apps/mvim
+set focuscontent
+set "hintchars=dhtnaoeuifgcrl',.pybm;qjkx"
+set tabnumbers
+source! /Users/balamurugan/.vimperatorrc.local
+
+" vim: set ft=vimperator:

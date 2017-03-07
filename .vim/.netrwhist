@@ -1,0 +1,10 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =8
+let g:netrw_dirhist_1='/Users/balamurugan/.henplus'
+let g:netrw_dirhist_2='/Users/balamurugan/.oh-my-zsh/plugins/common-aliases'
+let g:netrw_dirhist_3='/Users/balamurugan/.oh-my-zsh/plugins'
+let g:netrw_dirhist_4='/Users/balamurugan/.oh-my-zsh/plugins/fasd'
+let g:netrw_dirhist_5='/Users/balamurugan/.henplus'
+let g:netrw_dirhist_6='/Users/balamurugan/Temp/zookeeper'
+let g:netrw_dirhist_7='/Users/balamurugan/Temp/zookeeper/version-2'
+let g:netrw_dirhist_8='/Users/balamurugan/Temp/zookeeper'
