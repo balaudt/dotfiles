@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/balamurugan/.oh-my-zsh
+export ZSH=/home/balamurugan/.oh-my-zsh
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -51,7 +51,7 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git common-aliases mvn fasd git-extras github extract colorize jump taskwarrior httpie)
+plugins=(git extract common-aliases z)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -126,4 +126,3 @@ tailstorm () {
     ctail -m "$hosts" -f /home/y/var/storm/workers-artifacts/$topology/6700/worker.log
 }
 
-source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

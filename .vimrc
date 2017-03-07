@@ -43,8 +43,7 @@ let g:tagbar_type_vimwiki = {
 
 syntax enable
 set background=light
-colorscheme solarized
-map <D-e> :CtrlPMRU<CR>
+map <C-e> :CtrlPMRU<CR>
 map <C-Tab> :CtrlPSmartTabs<CR>
 map <Leader>o :CtrlPTag<CR>
 map <F12> :TagbarToggle<CR>
@@ -58,7 +57,6 @@ map <Leader>d :%d<CR>:w<CR>
 map <Leader>q :qa<CR>
 map <Leader>f :Autoformat<CR>
 map <Leader>F :Autoformat 
-map co :ed 
 map cO :tabo <CR>
 let g:tagbar_autofocus = 1
 let g:vimwiki_list=[{'path':'~/vimwiki','automatic_nested_syntaxes':1,'auto_tags':1,'syntax':'markdown','ext':'.md'},
