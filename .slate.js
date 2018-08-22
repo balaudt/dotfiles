@@ -33,9 +33,17 @@ Object.keys(bindings).forEach(binding=> {
 slate.bindAll({
     "f:cmd;esc": move(ox, oy, sx, sy),
     "v:cmd;esc": move(ox, oy, `${sx}/2`, sy),
-    "v:ctrl;esc": move(`${sx}/2`, oy, `${sx}/2`, sy),
+    "v:ctrl;esc": move(`${sx}/2`, oy, `${sx}`, sy),
     "s:cmd;esc": move(ox, oy, sx, `${sy}/2`),
-    "s:ctrl;esc": move(ox, `${sy}/2`, sx, `${sy}/2`),
+    "s:ctrl;esc": move(ox, `${sy}/2`, sx, `${sy}`),
+    "t:cmd;esc": slate.operation("hint", {
+        "characters": "OIUMN"
+    }),
     "tab:alt": slate.operation("switch")
 });
+for (let i = 0; i <= 5; i++) {
+    slate.bind(`${i}:cmd;esc`, slate.operation("throw", {
+        "screen": `${i}`
+    }));
+}
 

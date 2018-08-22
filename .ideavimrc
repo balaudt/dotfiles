@@ -21,12 +21,25 @@ map gp :action MethodUp<cr>
 map <Leader>h :action LocalHistory.ShowHistory<cr>
 map <Leader>c :action Git.CompareWithBranch<cr>
 map <Leader>i :action ImportModule<cr>
-map <Leader>r :action Run<cr>
-map <Leader>d :action Debug<cr>
-map <Leader>R :action ChooseRunConfiguration<cr>
-map <Leader>D :action ChooseDebugConfiguration<cr>
+map <Leader>R :action Run<cr>
+map <Leader>D :action Debug<cr>
+map <Leader>r :action ChooseRunConfiguration<cr>
+map <Leader>d :action ChooseDebugConfiguration<cr>
 map <Leader>gd :action ActivateDatabaseToolWindow<cr>
 map <Leader>gc :action ActivateDatabaseConsoleToolWindow<cr>
 map <Leader>t :action Refactorings.QuickListPopupAction<cr>
-map co :ed 
-map cO :action CloseAllEditorsButActive<cr>
+map <Leader>Q :action CloseProject<cr>
+map <Leader>s :action ConvertIndentsToSpaces<cr>
+map <Leader>o :action ManageRecentProjects<cr>
+map co :action CloseAllEditorsButActive<cr>
+
+imap <C-a> <C-o>0
+imap <C-e> <C-o>$
+imap <C-f> <C-o>l
+imap <C-b> <C-o>h
+imap <C-n> <C-o>j
+imap <C-p> <C-o>k
+imap <C-v> <C-o><C-f>
+imap <M-v> <C-o><C-b>
+imap <M-f> <C-o>w
+imap <M-b> <C-o>b

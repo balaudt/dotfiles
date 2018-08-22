@@ -1,8 +1,20 @@
+# Credit: https://kev.inburke.com/kevin/profiling-zsh-startup-time/
+
+PROFILE_STARTUP=false
+if [[ "$PROFILE_STARTUP" == true ]]; then
+    zmodload zsh/zprof # Output load-time statistics
+    # http://zsh.sourceforge.net/Doc/Release/Prompt-Expansion.html
+    PS4=$'%D{%M%S%.} %N:%i> '
+    exec 3>&2 2>"${XDG_CACHE_HOME:-$HOME/temp}/zsh_statup.$$"
+    setopt xtrace prompt_subst
+fi
+
+# 
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH=/home/balamurugan/.oh-my-zsh
+export ZSH=$HOME/oh-my-zsh
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -51,7 +63,8 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git extract common-aliases z)
+export PER_DIRECTORY_HISTORY_TOGGLE='^T'
+plugins=(git mvn fasd extract colorize vi-mode taskwarrior per-directory-history)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -84,15 +97,12 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 source ~/.bash_profile
-alias e=extract
 alias c=colorize
 
 DISABLE_AUTO_TITLE="true"
 tt () {
     echo -e "\033];$@\007"
 }
-
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 MARKER_KEY_MARK='\C-o'
 [[ -s "$HOME/.local/share/marker/marker.sh" ]] && source "$HOME/.local/share/marker/marker.sh"
@@ -126,4 +136,37 @@ tailstorm () {
     echo "Hosts : " $hosts
     ctail -m "$hosts" -f /home/y/var/storm/workers-artifacts/$topology/6700/worker.log
 }
+
+source ~/oh-my-zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh  
+
+export SSH_AUTH_SOCK=$HOME/.yubiagent/sock
+
+function diff {
+     colordiff -u "$@" | less -RF
+}
+
+#dedup history
+setopt EXTENDED_HISTORY
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_FIND_NO_DUPS
+setopt HIST_SAVE_NO_DUPS
+setopt HIST_BEEP
+
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh --no-use" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# Entirety of your .zshrc 
+
+if [[ "$PROFILE_STARTUP" == true ]]; then
+    zprof
+    unsetopt xtrace
+    exec 2>&3 3>&-
+fi
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 

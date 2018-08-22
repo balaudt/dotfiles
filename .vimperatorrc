@@ -1,13 +1,29 @@
 "3.16.0 (created: 2017/02/01 00:55:15)
 
+command! sp emenu Tile.New Layout.2 Tabs - Horizontal
+command! vsp emenu Tile.New Layout.2 Tabs - Vertical
 highlight Hint font-family: monospace; font-size: 10px; font-weight: bold; text-transform: uppercase; color: white; background-color: red; border-color: ButtonShadow; border-width: 0px; border-style: solid; padding: 0px 1px 0px 1px; font-size: 100%;
 map <C-w>s :emenu<Space>Tile.Tile<Space>New<Space>Tab.Below<Return>
 map <C-w>v :emenu<Space>Tile.Tile<Space>New<Space>Tab.Right<Return>
-map "\\t" :tabo<Return>
+map <C-w>S :emenu<Space>Tile.Tile<Space>Duplicate<Space>Tab.Below<Return>
+map <C-w>V :emenu<Space>Tile.Tile<Space>Duplicate<Space>Tab.Right<Return>
+map "\\s" :tabopen<Space>screwdriver<Space>
+map "\\n" :tabopen<Space>nimbus<Space>
+map "\\z" :tabopen<Space>topics<Space>
+map "\\t" :tabopen<Space>trust<Space>and<Space>safety<Space>
+map "\\c" :tabopen<Space>git<Space>corp<Space>cerberus<Space>
+map "\\S" :open<Space>screwdriver<Space>
+map "\\N" :open<Space>nimbus<Space>
+map "\\Z" :open<Space>topics<Space>
+map "\\T" :open<Space>trust<Space>and<Space>safety<Space>
+map "\\C" :open<Space>git<Space>corp<Space>cerberus<Space>
+map "\\a" :tabo<Return>
+set complete=bsl
 set editor=/Users/balamurugan/apps/mvim
 set focuscontent
 set "hintchars=dhtnaoeuifgcrl',.pybm;qjkx"
 set tabnumbers
+set visualbell
 source! /Users/balamurugan/.vimperatorrc.local
 
 " vim: set ft=vimperator:
