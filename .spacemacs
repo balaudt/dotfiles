@@ -30,7 +30,7 @@ values."
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(
+   '(restclient
      javascript
      clojure
      yaml
@@ -64,7 +64,10 @@ values."
      tabbar
      fasd
      journal
-     pdf-tools
+     pdf
+     ;(java :variables java-backend 'eclim
+     ;      eclim-eclipse-dirs '("/Applications/Eclipse.app/Contents/Eclipse/")
+     ;      eclimd-executable "/Applications/Eclipse.app/Contents/Eclipse/eclimd")
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -73,7 +76,10 @@ values."
    dotspacemacs-additional-packages '(
                                       org-cliplink
                                       org-brain
+                                      prettier-js
                                       (sunrise-commander :location (recipe :fetcher github :repo "escherdragon/sunrise-commander"))
+                                      calfw
+                                      helm-dash
                                       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -321,6 +327,10 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
+  (setq tramp-ssh-controlmaster-options
+        "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
+
+  (server-start)
   )
 
 (defun dotspacemacs/user-config ()
@@ -335,7 +345,9 @@ you should place your code here."
   (spacemacs/set-leader-keys "fH" 'eww-open-file)
   (spacemacs/set-leader-keys "tw" 'visual-line-mode)
   (spacemacs/set-leader-keys "tW" 'whitespace-mode)
-  
+  (spacemacs/set-leader-keys "js" 'helm-imenu)
+  (spacemacs/set-leader-keys "ae" 'eshell)
+
   (spacemacs/set-leader-keys-for-major-mode 'org-mode "eh" 'org-html-export-to-html)
   (spacemacs/set-leader-keys-for-major-mode 'org-mode "ic" 'org-cliplink)
   (spacemacs/set-leader-keys-for-major-mode 'org-mode "-" 'dired-jump)
@@ -344,13 +356,16 @@ you should place your code here."
   (setq org-agenda-files '("~/Dropbox/org"))
   (setq org-refile-targets '((org-agenda-files :maxlevel . 4)))
 
-  (global-set-key (kbd "s-{") 'tabbar-backward-tab)
-  (global-set-key (kbd "s-}") 'tabbar-forward-tab)
-  (global-set-key (kbd "s-<left>") 'beginning-of-line)
-  (global-set-key (kbd "s-<right>") 'end-of-line)
+  (global-set-key (kbd "H-{") 'tabbar-backward-tab)
+  (global-set-key (kbd "H-}") 'tabbar-forward-tab)
+  (global-set-key (kbd "H-<left>") 'beginning-of-line)
+  (global-set-key (kbd "H-<right>") 'end-of-line)
+  (global-set-key (kbd "H-k") 'spacemacs/kill-this-buffer)
+  (global-set-key (kbd "H-K") 'spacemacs/kill-other-buffers)
+  (global-set-key (kbd "H-t") 'spacemacs/new-empty-buffer)
   (global-set-key (kbd "C-]") 'dumb-jump-go)
   (global-set-key (kbd "<C-tab>") 'helm-buffers-list)
-  (global-set-key (kbd "s-e") 'helm-recentf)
+  (global-set-key (kbd "H-e") 'helm-recentf)
   (define-key evil-normal-state-map "gt" 'tabbar-forward-tab)
   (define-key evil-normal-state-map "gT" 'tabbar-backward-tab)
   (define-key evil-normal-state-map (kbd "C-]") 'dumb-jump-go)
@@ -369,6 +384,24 @@ you should place your code here."
     "Groups tabs in tabbar-mode by the git repository they are in."
     (list (find-git-dir (buffer-file-name (current-buffer)))))
   (setq tabbar-buffer-groups-function 'git-tabbar-buffer-groups)
+
+  (require 'calfw)
+  (semantic-mode)
+
+  (use-package org-brain :ensure t
+    :init
+    (setq org-brain-path "~/Dropbox/brain/")
+    (with-eval-after-load 'evil
+      (evil-set-initial-state 'org-brain-visualize-mode 'emacs))
+    :config
+    (setq org-id-track-globally t)
+    (setq org-id-locations-file "~/Dropbox/.brain-ids"))
+
+  (setq spacemacs-useful-buffers-regexp '("\\*\\(ansi-term\\|eshell\\|shell\\|terminal.+\\)\\(-[0-9]+\\)?\\*" "\\*scratch\\*"))
+  (setq spacemacs-useless-buffers-regexp '("*.+"))
+  (setq helm-boring-buffer-regexp-list '("*.+"))
+
+  (setq projectile-switch-project-action 'projectile-dired)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -381,7 +414,7 @@ you should place your code here."
  '(evil-escape-delay 0.5)
  '(package-selected-packages
    (quote
-    (sesman sunrise-commander web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor js2-mode js-doc company-tern tern coffee-mode org-brain pdf-tools tablist org-cliplink clojure-snippets clj-refactor inflections edn multiple-cursors paredit peg cider-eval-sexp-fu cider seq queue clojure-mode org-wiki yaml-mode yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode dash-functional helm-pydoc cython-mode company-anaconda anaconda-mode pythonic org-journal fasd xterm-color shell-pop multi-term git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck eshell-z eshell-prompt-extras esh-help diff-hl auto-dictionary web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data vimrc-mode dactyl-mode tabbar smeargle orgit noflet mmm-mode markdown-toc markdown-mode magit-gitflow helm-gitignore helm-company helm-c-yasnippet gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy evil-magit magit magit-popup git-commit ghub let-alist with-editor ensime sbt-mode scala-mode company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download htmlize gnuplot sql-indent ranger solarized-theme ws-butler winum volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg eval-sexp-fu highlight elisp-slime-nav dumb-jump diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed ace-link ace-jump-helm-line helm helm-core popup which-key undo-tree org-plus-contrib hydra evil-unimpaired f s dash async aggressive-indent adaptive-wrap ace-window avy)))
+    (treepy graphql prettier-js sesman sunrise-commander web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor js2-mode js-doc company-tern tern coffee-mode org-brain pdf-tools tablist org-cliplink clojure-snippets clj-refactor inflections edn multiple-cursors paredit peg cider-eval-sexp-fu cider seq queue clojure-mode org-wiki yaml-mode yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode dash-functional helm-pydoc cython-mode company-anaconda anaconda-mode pythonic org-journal fasd xterm-color shell-pop multi-term git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck eshell-z eshell-prompt-extras esh-help diff-hl auto-dictionary web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data vimrc-mode dactyl-mode tabbar smeargle orgit noflet mmm-mode markdown-toc markdown-mode magit-gitflow helm-gitignore helm-company helm-c-yasnippet gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy evil-magit magit magit-popup git-commit ghub let-alist with-editor ensime sbt-mode scala-mode company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download htmlize gnuplot sql-indent ranger solarized-theme ws-butler winum volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg eval-sexp-fu highlight elisp-slime-nav dumb-jump diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed ace-link ace-jump-helm-line helm helm-core popup which-key undo-tree org-plus-contrib hydra evil-unimpaired f s dash async aggressive-indent adaptive-wrap ace-window avy)))
  '(spacemacs-large-file-modes-list
    (quote
     (archive-mode tar-mode jka-compr git-commit-mode image-mode doc-view-mode doc-view-mode-maybe ebrowse-tree-mode pdf-view-mode tags-table-mode)))
@@ -399,3 +432,35 @@ you should place your code here."
  '(org-level-6 ((t (:inherit outline-4 :height 1.0))))
  '(org-level-7 ((t (:inherit outline-4 :height 1.0))))
  '(org-level-8 ((t (:inherit outline-4 :height 1.0)))))
+(defun dotspacemacs/emacs-custom-settings ()
+  "Emacs custom settings.
+This is an auto-generated function, do not modify its content directly, use
+Emacs customize menu instead.
+This function is called at the very end of Spacemacs initialization."
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(evil-escape-delay 0.5)
+ '(package-selected-packages
+   (quote
+    (helm-dash treepy graphql prettier-js sesman sunrise-commander web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor js2-mode js-doc company-tern tern coffee-mode org-brain pdf-tools tablist org-cliplink clojure-snippets clj-refactor inflections edn multiple-cursors paredit peg cider-eval-sexp-fu cider seq queue clojure-mode org-wiki yaml-mode yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode dash-functional helm-pydoc cython-mode company-anaconda anaconda-mode pythonic org-journal fasd xterm-color shell-pop multi-term git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck eshell-z eshell-prompt-extras esh-help diff-hl auto-dictionary web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data vimrc-mode dactyl-mode tabbar smeargle orgit noflet mmm-mode markdown-toc markdown-mode magit-gitflow helm-gitignore helm-company helm-c-yasnippet gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy evil-magit magit magit-popup git-commit ghub let-alist with-editor ensime sbt-mode scala-mode company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download htmlize gnuplot sql-indent ranger solarized-theme ws-butler winum volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg eval-sexp-fu highlight elisp-slime-nav dumb-jump diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed ace-link ace-jump-helm-line helm helm-core popup which-key undo-tree org-plus-contrib hydra evil-unimpaired f s dash async aggressive-indent adaptive-wrap ace-window avy)))
+ '(spacemacs-large-file-modes-list
+   (quote
+    (archive-mode tar-mode jka-compr git-commit-mode image-mode doc-view-mode doc-view-mode-maybe ebrowse-tree-mode pdf-view-mode tags-table-mode)))
+ '(tabbar-separator (quote (0.5))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-level-1 ((t (:inherit outline-4 :height 1.0))))
+ '(org-level-2 ((t (:inherit outline-4 :height 1.0))))
+ '(org-level-3 ((t (:inherit outline-4 :height 1.0))))
+ '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
+ '(org-level-5 ((t (:inherit outline-4 :height 1.0))))
+ '(org-level-6 ((t (:inherit outline-4 :height 1.0))))
+ '(org-level-7 ((t (:inherit outline-4 :height 1.0))))
+ '(org-level-8 ((t (:inherit outline-4 :height 1.0)))))
+)

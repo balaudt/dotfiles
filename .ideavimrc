@@ -1,3 +1,5 @@
+set showmode
+set incsearch
 set ignorecase
 set smartcase
 set diffopt+=iwhite,icase
@@ -13,25 +15,6 @@ set autoread
 set autochdir
 set surround
 syntax enable
-let mapleader = " "
-map <Leader>m vat<Esc>
-map <Leader>M vato<Esc>
-map gn :action MethodDown<cr>
-map gp :action MethodUp<cr>
-map <Leader>h :action LocalHistory.ShowHistory<cr>
-map <Leader>c :action Git.CompareWithBranch<cr>
-map <Leader>i :action ImportModule<cr>
-map <Leader>R :action Run<cr>
-map <Leader>D :action Debug<cr>
-map <Leader>r :action ChooseRunConfiguration<cr>
-map <Leader>d :action ChooseDebugConfiguration<cr>
-map <Leader>gd :action ActivateDatabaseToolWindow<cr>
-map <Leader>gc :action ActivateDatabaseConsoleToolWindow<cr>
-map <Leader>t :action Refactorings.QuickListPopupAction<cr>
-map <Leader>Q :action CloseProject<cr>
-map <Leader>s :action ConvertIndentsToSpaces<cr>
-map <Leader>o :action ManageRecentProjects<cr>
-map co :action CloseAllEditorsButActive<cr>
 
 imap <C-a> <C-o>0
 imap <C-e> <C-o>$
@@ -43,3 +26,224 @@ imap <C-v> <C-o><C-f>
 imap <M-v> <C-o><C-b>
 imap <M-f> <C-o>w
 imap <M-b> <C-o>b
+
+let mapleader = " "
+" leaderless keys
+map g,    :action JumpToNextChange<CR>
+map g;    :action JumpToLastChange<CR>
+map gsf   :action AceAction<CR>
+map gsj   :action AceLineAction<CR>
+map zr    :action ExpandAllRegions<CR>
+map zm    :action CollapseAllRegions<CR>
+map <c-i>    :action Forward<CR>
+map <c-o>    :action Back<CR>
+
+
+" root leader keys
+map <leader><Space>    :action GotoAction<CR>
+map <leader><tab>    :action VimFilePrevious<CR>
+map <leader>'    :action Terminal.OpenInTerminal<CR>
+map <leader>!    :action Terminal.OpenInTerminal<CR>
+map <leader>*    :action ShowUsages<CR>
+map <leader>;;    :action CommentByLineComment<CR>
+
+" a - application
+map <leader>at  :action ActivateTODOToolWindow<CR>
+map <leader>ad :action ActivateDatabaseToolWindow<cr>
+map <leader>ac :action ActivateDatabaseConsoleToolWindow<cr>
+map <leader>aP    :action WelcomeScreen.Plugins<CR>
+map <leader>ab    :action ShowProcessWindow<CR>
+map <leader>al    :action ActivateEventLogToolWindow<CR>
+map <leader>ap    :action ActivateProjectToolWindow<CR>
+map <leader>ah    :action HideAllWindows<CR>
+
+" B - bookmarks
+map <leader>Bl :action ShowBookmarks<CR>
+map <leader>BN    :action GotoPreviousBookmark<CR>
+map <leader>Bn    :action GotoNextBookmark<CR>
+map <leader>Bp    :action GotoPreviousBookmark<CR>
+map <leader>BT    :action ToggleBookmarkWithMnemonic<CR>
+map <leader>Bt    :action ToggleBookmark<CR>
+
+" b - buffers
+map <leader>b0    :action GoToTab1<CR>
+map <leader>b$    :action GoToLastTab<CR>
+map <leader>bb    :action RecentFiles<CR>
+map <leader>bd    :action CloseContent<CR>
+map <leader>bn    :action NextTab<CR>
+map <leader>bP    ggVGp<CR>
+map <leader>bp    :action PreviousTab<CR>
+map <leader>bu    :action ReopenClosedTab<CR>
+map <leader>bx    :action CloseAllEditors<CR>
+map <leader>bY    :%y<CR>
+map <leader>bo    :action CloseAllEditorsButActive<CR>
+
+" c - comment
+map <leader>cl    :action CommentByLineComment<CR>
+map <leader>cp    vip<CR>:action CommentByLineComment<CR>:action VimVisualExitMode<CR>
+map <leader>ct    Vgg:action CommentByLineComment<CR>:action VimVisualExitMode<CR>
+map <leader>cy    yyP:action CommentByLineComment<CR>
+
+" d - debug
+map <leader>db    :action ToggleLineBreakpoint<CR>
+map <leader>dB    :action ViewBreakpoints<CR>
+map <leader>dC    :action Debugger.RemoveAllBreakpointsInFile<CR>
+map <leader>dc    :action Resume<CR>
+map <leader>dD    :action DebugClass<CR>
+map <leader>dd    :action Debug<CR>
+map <leader>dn    :action StepOver<CR>
+map <leader>do    :action StepOut<CR>
+map <leader>dr    :action ChooseDebugConfiguration<CR>
+map <leader>ds    :action StepInto<CR>
+
+" e - errors
+map <leader>ep    :action GotoPreviousError<CR>
+map <leader>en    :action GotoNextError<CR>
+map <leader>ex    :action ShowErrorDescription<CR>
+
+" f - files
+map <leader>fn    :action NewClass<CR>
+map <leader>fN    :action NewElement<CR>
+map <leader>fh    :action LocalHistory.ShowHistory<CR>
+map <leader>fs    :action Find<CR>
+map <leader>fc      :action Compile<CR>
+map <leader>ff    :action ReformatCode<CR>
+map <leader>fi      :action OptimizeImports<CR>
+map <leader>fr    :action RecentFiles<CR>
+map <leader>fR    :action RenameFile<CR>
+map <leader>fS    :action SaveAll<CR>
+map <leader>fb    :action ShowBookmarks<CR>
+map <leader>fyy    :action CopyPaths<CR>
+map <leader>fyr    :action CopyReference<CR>
+map <leader>ft    :action GotoTest<CR>
+
+" g - git
+map <leader>gb    :action Git.Branches<CR>
+map <leader>gG    :action ActivateVersionControlToolWindow<CR>
+map <leader>gg    :action Vcs.QuickListPopupAction<CR>
+map <leader>gp    :action Vcs.Push<cr>
+map <leader>gS    :action Vcs.Show.Shelf<CR>
+map <leader>gc    :action Git.CompareWithBranch<CR>
+map <leader>gh    :action Vcs.ShowTabbedFileHistory<CR>
+map <leader>gs    :action Vcs.Show.Local.Changes<CR>
+map <leader>gu    :action Vcs.UpdateProject<CR>
+map <leader>ga    :action Annotate<CR>
+map <leader>gl    :action Vcs.Show.Log<CR>
+map <leader>gr    :action Git.ResolveConflicts<CR>
+
+" h - help/hierarchy
+map <leader>hc      :action CallHierarchy<CR>
+map <leader>ht      :action TypeHierarchy<CR>
+
+" j - jump
+map <leader>jc    :action GotoClass<CR>
+map <leader>js    :action FileStructurePopup<CR>
+map <leader>jn    :action MethodDown<cr>
+map <leader>jp    :action MethodUp<cr>
+map <Leader>jm    vat<Esc>
+map <Leader>jM    vato<Esc>
+map <Leader>jl    :action AceLineAction<CR>
+map <Leader>ja    :action AceAction<CR>
+map <Leader>jw    :action AceWordAction<CR>
+
+" n - navigate
+map <leader>ng    :action GotoDeclaration<CR>
+map <leader>ni    :action GotoImplementation<CR>
+map <leader>nt    :action GotoTypeDeclaration<CR>
+map <leader>n[    :action EditorCodeBlockStart<CR>
+map <leader>n]    :action EditorCodeBlockEnd<CR>
+
+" p - projects
+map <leader>pt   :action GotoClass<CR>
+map <leader>ps    :action GotoSymbol<CR>
+map <leader>pf    :action GotoFile<CR>
+map <leader>pc      :action CompileDirty<CR>
+map <leader>pu      :action FindUsages<CR>
+map <leader>po    :action ImportProject<CR>
+map <leader>pi    :action ImportModule<CR>
+map <leader>pm    :action MakeModule<CR>
+map <leader>pI    :action InvalidateCaches<CR>
+map <leader>pp    :action ManageRecentProjects<CR>
+
+" q - quit
+map <leader>qf    :action CloseProject<CR>
+map <leader>qq    :action CloseProject<CR>
+map <leader>qQ    :action Exit<CR>
+map <leader>qs    :action SaveAll<CR>:action CloseProject<CR>
+
+" r - run / refactoring
+map <leader>rr    :action Run<CR>
+map <leader>rd    :action ChooseRunConfiguration<CR>
+map <leader>rc      :action GenerateConstructor<CR>
+map <leader>rC      :action CodeCleanup<CR>
+map <leader>rm    :action ExtractMethod<CR>
+map <leader>rv    :action IntroduceVariable<CR>
+map <leader>rS    :action ExtractSuperclass<CR>
+map <leader>rs      :action GenerateGetterAndSetter<CR>
+map <leader>rg      :action Generate<CR>
+map <leader>rI      :action ImplementMethods<CR>
+map <leader>ri      :action OptimizeImports<CR>
+map <leader>rt      :action Refactorings.QuickListPopupAction<CR>
+map <leader>rR      :action RenameElement<CR>
+
+" R - registers
+map <leader>Re    :reg<CR>
+map <leader>Ry    :action PasteMultiple<CR>
+
+" s - search
+map <leader>sp    :action FindInPath<CR>
+map <leader>sr    :action ReplaceInPath<CR>
+map <leader>sc    :nohlsearch<CR>
+map <leader>sh    :action HighlightUsagesInFile<CR>
+map <leader>su    :action FindUsages<CR>
+map <leader>ss    :action SearchEverywhere<CR>
+
+" t - toggle
+map <leader>ti    :action EditorToggleShowIndentLines<CR>
+map <leader>tl    :action EditorGutterToggleGlobalSoftWraps<CR>
+map <leader>tn    :action EditorGutterToggleGlobalLineNumbers<CR>
+map <leader>tw    :action EditorToggleShowWhitespaces<CR>
+map <leader>tg    :action EditorToggleShowGutterIcons<CR>
+map <leader>tp    :action TogglePowerSave<CR>
+map <leader>Tt    :action ToggleDistractionFreeMode<CR>
+map <leader>Tp    :action TogglePresentationMode<CR>
+map <leader>TT    :action ChangeView<CR>
+
+" v - view
+map <leader>vi      :action QuickImplementations<CR>
+map <leader>vj      :action QuickJavaDoc<CR>
+map <leader>vu      :action ShowUsages<CR>
+
+" w - window
+map <leader>wv    :action SplitVertically<CR>
+map <leader>ws    :action SplitHorizontally<CR>
+map <leader>wd    :action VimWindowClose<CR>
+map <leader>wH    :action VimWindowLeft<CR>10@:
+map <leader>wh         :action VimWindowLeft<CR>
+map <leader>wJ    :action VimWindowDown<CR>10@:
+map <leader>wj         :action VimWindowDown<CR>
+map <leader>wK    :action VimWindowUp<CR>10@:
+map <leader>wk       :action VimWindowUp<CR>
+map <leader>wL    :action VimWindowRight<CR>10@:
+map <leader>wl          :action VimWindowRight<CR>
+map <leader>wo    :action NextProjectWindow<CR>
+map <leader>wS    :action SplitHorizontally<CR>:action VimWindowDown<CR>
+map <leader>wV    :action SplitVertically<CR>:action VimWindowRight<CR>
+map <leader>ww    :action VimWindowNext<CR>
+
+" x - text
+map <leader>xc     g<C-g>
+map <leader>xd<Space>    wh:action EditorHungryBackSpace<CR>
+map <leader>xJ    $:action MoveLineDown<CR>
+map <leader>xK    $:action MoveLineUp<CR>
+map <leader>xtc    xhP
+map <leader>xtl    ddkP
+map <leader>xU    vU
+map <leader>xu    vu
+map <Leader>xs :action ConvertIndentsToSpaces<cr>
+
+" z - zoom
+map <leader>z+    :action EditorIncreaseFontSize<CR>
+map <leader>z-    :action EditorDecreaseFontSize<CR>
+map <leader>z0    :action EditorResetFontSize<CR>
+

@@ -1,0 +1,172 @@
+" Let Vim and NeoVim shares the same plugin directory.
+" Comment it out if you don't like
+let g:spacevim_plug_home = '~/.vim/plugged'
+
+" The default leader key is space key.
+" Uncomment the line below and modify "<\Space>" if you prefer another
+" let g:spacevim_leader = "<\Space>"
+
+" The default local leader key is comma.
+" Uncomment the line below and modify ',' if you prefer another
+" let g:spacevim_localleader = ','
+
+" Enable the existing layers in space-vim
+let g:spacevim_layers = [
+      \ 'fzf', 'better-defaults', 'which-key', 'better-motion', 'git', 'auto-completion',
+      \ 'editing', 'formatting', 'programming', 'goyo', 'ctags']
+
+" If you want to have more control over the layer, try using Layer command.
+" if g:spacevim.gui
+"   Layer 'airline'
+" endif
+
+" Manage your own plugins, refer to vim-plug's instruction for more detials.
+function! UserInit()
+
+  " Add plugin via Plug command.
+  Plug 'junegunn/seoul256.vim'
+  Plug 'altercation/vim-colors-solarized'
+  Plug 'tpope/vim-vinegar'
+  Plug 'tpope/vim-unimpaired'
+  Plug 'Shougo/denite.nvim'
+  Plug 'Shougo/vimfiler.vim'
+  Plug 'rizzatti/dash.vim'
+
+endfunction
+
+" Override the default settings as well as adding extras
+function! UserConfig()
+  " If you have installed the powerline fonts and want to enable airline layer
+  " let g:airline_powerline_fonts=1
+
+  " Use gui colors in terminal if available
+  function! s:enable_termgui()
+    if has('termguicolors')
+      set termguicolors
+      if g:spacevim.tmux
+        " If use vim inside tmux, see https://github.com/vim/vim/issues/993
+        " set Vim-specific sequences for RGB colors
+        let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+        let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+      endif
+    endif
+  endfunction
+
+  " If your terminal(-emulator) supports true colors, uncomment the line below
+  " call s:enable_termgui()
+  set ignorecase
+  set smartcase
+  set diffopt+=iwhite,icase
+  set number
+  set nowrap
+  set autoindent
+  set clipboard=unnamedplus,unnamed
+  set hlsearch
+  set cursorline
+  set laststatus=2
+  set ruler
+  set autoread
+
+  let g:tagbar_type_scala = {
+        \ 'ctagstype' : 'scala',
+        \ 'sro'       : '.',
+        \ 'kinds'     : [
+        \ 'p:packages',
+        \ 'T:types:1',
+        \ 't:traits',
+        \ 'o:objects',
+        \ 'O:case objects',
+        \ 'c:classes',
+        \ 'C:case classes',
+        \ 'm:methods',
+        \ 'V:values:1',
+        \ 'v:variables:1'
+        \ ]
+        \ }
+  let g:tagbar_type_vimwiki = {
+        \   'ctagstype':'vimwiki'
+        \ , 'kinds':['h:header']
+        \ , 'sro':'&&&'
+        \ , 'kind2scope':{'h':'header'}
+        \ , 'sort':0
+        \ , 'ctagsbin':'/Users/balamurugan/.vim/bundle/tagbar/vwtags.py'
+        \ , 'ctagsargs': 'default'
+        \ }
+
+  syntax enable
+  set background=light
+  colorscheme solarized
+
+  " f - files
+  map <C-Tab> :Windows<CR>
+  map <Space>fy :let @+ = expand("%:p")<CR>
+  map <Space>ft :VimFiler<CR>
+  map <Space>fT :VimFilerExplorer<CR>
+  map <F2> :VimFilerExplorer<CR>
+
+  " b - buffers
+  map <Space>bd :bd!<CR>
+  map <D-w> :bd!<CR>
+
+  " g - git
+  map <Space>gm :Gdiff!<CR>
+
+  " j - jump
+  map <Space>js :BTags<CR>
+  map <F12> :BTags<CR>
+  
+  map <F3> :TagbarToggle<CR>
+  map <F4> :Dash<CR>
+  
+  let g:tagbar_autofocus = 1
+  let g:netrw_liststyle=1
+  let g:netrw_sizestyle="h"
+  let g:startify_bookmarks = [{'y':'/Users/balamurugan/dev/yapee/'},
+        \ {'t':'/Users/balamurugan/Temp'},
+        \ {'c':'/Users/balamurugan/dev/cerberus'},
+        \ {'s':'/Users/balamurugan/dev/cerberus/storm'}]
+  let g:startify_custom_header = ['Home page']
+  let g:startify_list_order = ['files','bookmarks']
+  let g:rg_highlight='true'
+  let g:signify_realtime=1
+
+  " Neo complete settings
+  let g:neocomplete#enable_at_startup = 1
+  let g:neocomplete#enable_smart_case = 1
+  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+  autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+  autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+  autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+  imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+  smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+  xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+  filetype plugin on
+
+  set wildmenu
+  set wildignore=*.class
+
+  imap fd <Esc>
+
+  nmap <Space>ff :Autoformat<CR>
+  nmap <Space>fr :History<CR>
+  let g:fzf_colors =
+        \ { 'fg':      ['fg', 'Normal'],
+        \ 'bg':      ['bg', 'Normal'],
+        \ 'hl':      ['fg', 'Comment'],
+        \ 'fg+':     ['fg', 'Normal'],
+        \ 'bg+':     ['bg', 'Normal'],
+        \ 'hl+':     ['fg', 'Statement'],
+        \ 'info':    ['fg', 'PreProc'],
+        \ 'border':  ['fg', 'Ignore'],
+        \ 'prompt':  ['fg', 'Conditional'],
+        \ 'pointer': ['fg', 'Exception'],
+        \ 'marker':  ['fg', 'Keyword'],
+        \ 'spinner': ['fg', 'Label'],
+        \ 'header':  ['fg', 'Comment'] }
+
+  pyfile /Users/balamurugan/\.vimrc\.py
+  command! -bang -nargs=* Find py fzfFind(<q-args>)
+  map <Space>pq :Find
+endfunction

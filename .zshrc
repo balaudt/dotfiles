@@ -19,7 +19,7 @@ export ZSH=$HOME/oh-my-zsh
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="robbyrussell"
+ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -64,7 +64,7 @@ ZSH_THEME="robbyrussell"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 export PER_DIRECTORY_HISTORY_TOGGLE='^T'
-plugins=(git mvn fasd extract colorize vi-mode taskwarrior per-directory-history)
+plugins=(git mvn extract colorize per-directory-history fasd fzf common-aliases)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -105,14 +105,15 @@ tt () {
 }
 
 MARKER_KEY_MARK='\C-o'
+MARKER_KEY_NEXT_PLACEHOLDER='\et'
 [[ -s "$HOME/.local/share/marker/marker.sh" ]] && source "$HOME/.local/share/marker/marker.sh"
 
 box() {
-  curl http://roles.corp.yahoo.com/roles/v1/range/@$1.arya.main.$2\?output\=json -s | sed "s/\(\[{\"bases\":\[[^]]*],\"members\"\:\[\)\([^]]*\)\(.*\)/\2/g"|sed "s/\"//g"| sed -e 's/,/\'$'\n/g'
+  curl https://roles.corp.yahoo.com:4443/roles/v1/range/@$1.arya.main.$2\?output\=json -s | sed "s/\(\[{\"bases\":\[[^]]*],\"members\"\:\[\)\([^]]*\)\(.*\)/\2/g"|sed "s/\"//g"| sed -e 's/,/\'$'\n/g'
 }
 
 roles() {
-  curl -s http://roles.corp.yahoo.com/roles/v1/namespaces/$1/roles | grep "<role\ " | sed "s/^.*name=\"\([^\"]*\)\".*/\1/g"
+  curl -s https://roles.corp.yahoo.com:4443/roles/v1/namespaces/$1/roles | grep "<role\ " | sed "s/^.*name=\"\([^\"]*\)\".*/\1/g"
 }
 
 _box() {
@@ -124,7 +125,7 @@ compctl -K _box box
 compctl -K _box roles
 
 function refreshns {
-  curl http://roles.corp.yahoo.com/roles/v1/namespaces -s | grep "namespace\ name"| sed "s/^[^\"]*\"*//g"|sed "s/\".*//g" > ~/.rolesdb_namespaces
+  curl https://roles.corp.yahoo.com:4443/roles/v1/namespaces -s | grep "namespace\ name"| sed "s/^[^\"]*\"*//g"|sed "s/\".*//g" > ~/.rolesdb_namespaces
 }
 
 tailstorm () {
@@ -170,3 +171,17 @@ fi
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+z() {
+  local dir
+  dir="$(fasd -Rdl "$1" | fzf -1 -0 --no-sort +m)" && cd "${dir}" || return 1
+}
+
+export SSH_AUTH_SOCK=/Users/balamurugan/.yubiagent/sock
+
+export SSH_AUTH_SOCK=/Users/balamurugan/.yubiagent/sock
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
