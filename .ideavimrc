@@ -16,6 +16,7 @@ set autochdir
 set surround
 syntax enable
 
+" Readline bindings in insert mode
 imap <C-a> <C-o>0
 imap <C-e> <C-o>$
 imap <C-f> <C-o>l
@@ -71,9 +72,10 @@ map <leader>b$    :action GoToLastTab<CR>
 map <leader>bb    :action RecentFiles<CR>
 map <leader>bd    :action CloseContent<CR>
 map <leader>bn    :action NextTab<CR>
-map <leader>bP    ggVGp<CR>
+map <leader>bc    ggVGp<CR>
 map <leader>bp    :action PreviousTab<CR>
 map <leader>bu    :action ReopenClosedTab<CR>
+map <leader>br    :action RenameFile<CR>
 map <leader>bx    :action CloseAllEditors<CR>
 map <leader>bY    :%y<CR>
 map <leader>bo    :action CloseAllEditorsButActive<CR>
@@ -102,20 +104,19 @@ map <leader>en    :action GotoNextError<CR>
 map <leader>ex    :action ShowErrorDescription<CR>
 
 " f - files
-map <leader>fn    :action NewClass<CR>
-map <leader>fN    :action NewElement<CR>
+map <leader>ff    :action OpenFile<CR>
 map <leader>fh    :action LocalHistory.ShowHistory<CR>
-map <leader>fs    :action Find<CR>
-map <leader>fc      :action Compile<CR>
-map <leader>ff    :action ReformatCode<CR>
-map <leader>fi      :action OptimizeImports<CR>
+map <leader>fs    :action FileStructurePopup<CR>
+map <leader>fc	  ggVGy<CR>
 map <leader>fr    :action RecentFiles<CR>
-map <leader>fR    :action RenameFile<CR>
 map <leader>fS    :action SaveAll<CR>
 map <leader>fb    :action ShowBookmarks<CR>
 map <leader>fyy    :action CopyPaths<CR>
 map <leader>fyr    :action CopyReference<CR>
-map <leader>ft    :action GotoTest<CR>
+map <leader>ft    :action ActivateProjectToolWindow<CR>
+map <leader>fn    :action NewClass<CR>
+map <leader>fN    :action NewElement<CR>
+map <leader>fi      :action OptimizeImports<CR>
 
 " g - git
 map <leader>gb    :action Git.Branches<CR>
@@ -142,9 +143,12 @@ map <leader>jn    :action MethodDown<cr>
 map <leader>jp    :action MethodUp<cr>
 map <Leader>jm    vat<Esc>
 map <Leader>jM    vato<Esc>
-map <Leader>jl    :action AceLineAction<CR>
-map <Leader>ja    :action AceAction<CR>
+map <Leader>jj    :action AceLineAction<CR>
+map <Leader>jf    :action AceAction<CR>
 map <Leader>jw    :action AceWordAction<CR>
+
+" m - localleader
+map <leader>mf    :action ReformatCode<CR>
 
 " n - navigate
 map <leader>ng    :action GotoDeclaration<CR>
