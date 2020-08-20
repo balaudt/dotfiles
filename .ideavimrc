@@ -14,6 +14,8 @@ set ruler
 set autoread
 set autochdir
 set surround
+set visualbell
+set ideajoin
 syntax enable
 
 " Readline bindings in insert mode
@@ -29,11 +31,10 @@ imap <M-f> <C-o>w
 imap <M-b> <C-o>b
 
 let mapleader = " "
+let maplocalleader = "\\"
 " leaderless keys
 map g,    :action JumpToNextChange<CR>
 map g;    :action JumpToLastChange<CR>
-map gsf   :action AceAction<CR>
-map gsj   :action AceLineAction<CR>
 map zr    :action ExpandAllRegions<CR>
 map zm    :action CollapseAllRegions<CR>
 map <c-i>    :action Forward<CR>
@@ -46,30 +47,18 @@ map <leader><tab>    :action VimFilePrevious<CR>
 map <leader>'    :action Terminal.OpenInTerminal<CR>
 map <leader>!    :action Terminal.OpenInTerminal<CR>
 map <leader>*    :action ShowUsages<CR>
-map <leader>;;    :action CommentByLineComment<CR>
 
 " a - application
-map <leader>at  :action ActivateTODOToolWindow<CR>
 map <leader>ad :action ActivateDatabaseToolWindow<cr>
 map <leader>ac :action ActivateDatabaseConsoleToolWindow<cr>
-map <leader>aP    :action WelcomeScreen.Plugins<CR>
+map <leader>ap    :action WelcomeScreen.Plugins<CR>
 map <leader>ab    :action ShowProcessWindow<CR>
 map <leader>al    :action ActivateEventLogToolWindow<CR>
-map <leader>ap    :action ActivateProjectToolWindow<CR>
-map <leader>ah    :action HideAllWindows<CR>
-
-" B - bookmarks
-map <leader>Bl :action ShowBookmarks<CR>
-map <leader>BN    :action GotoPreviousBookmark<CR>
-map <leader>Bn    :action GotoNextBookmark<CR>
-map <leader>Bp    :action GotoPreviousBookmark<CR>
-map <leader>BT    :action ToggleBookmarkWithMnemonic<CR>
-map <leader>Bt    :action ToggleBookmark<CR>
 
 " b - buffers
 map <leader>b0    :action GoToTab1<CR>
 map <leader>b$    :action GoToLastTab<CR>
-map <leader>bb    :action RecentFiles<CR>
+map <leader>bb    :action Switcher<CR>
 map <leader>bd    :action CloseContent<CR>
 map <leader>bn    :action NextTab<CR>
 map <leader>bc    ggVGp<CR>
@@ -77,53 +66,27 @@ map <leader>bp    :action PreviousTab<CR>
 map <leader>bu    :action ReopenClosedTab<CR>
 map <leader>br    :action RenameFile<CR>
 map <leader>bx    :action CloseAllEditors<CR>
-map <leader>bY    :%y<CR>
+map <leader>by    :%y<CR>
 map <leader>bo    :action CloseAllEditorsButActive<CR>
-
-" c - comment
-map <leader>cl    :action CommentByLineComment<CR>
-map <leader>cp    vip<CR>:action CommentByLineComment<CR>:action VimVisualExitMode<CR>
-map <leader>ct    Vgg:action CommentByLineComment<CR>:action VimVisualExitMode<CR>
-map <leader>cy    yyP:action CommentByLineComment<CR>
+map <leader>bN    :action NewElement<CR>
 
 " d - debug
-map <leader>db    :action ToggleLineBreakpoint<CR>
-map <leader>dB    :action ViewBreakpoints<CR>
-map <leader>dC    :action Debugger.RemoveAllBreakpointsInFile<CR>
-map <leader>dc    :action Resume<CR>
+map <leader>db    :action ViewBreakpoints<CR>
+map <leader>dt    :action Debugger.RemoveAllBreakpoints<CR>
+map <leader>dT    :action Debugger.RemoveAllBreakpointsInFile<CR>
 map <leader>dD    :action DebugClass<CR>
 map <leader>dd    :action Debug<CR>
-map <leader>dn    :action StepOver<CR>
-map <leader>do    :action StepOut<CR>
 map <leader>dr    :action ChooseDebugConfiguration<CR>
-map <leader>ds    :action StepInto<CR>
-
-" e - errors
-map <leader>ep    :action GotoPreviousError<CR>
-map <leader>en    :action GotoNextError<CR>
-map <leader>ex    :action ShowErrorDescription<CR>
 
 " f - files
 map <leader>ff    :action OpenFile<CR>
 map <leader>fh    :action LocalHistory.ShowHistory<CR>
-map <leader>fs    :action FileStructurePopup<CR>
-map <leader>fc	  ggVGy<CR>
-map <leader>fr    :action RecentFiles<CR>
 map <leader>fS    :action SaveAll<CR>
-map <leader>fb    :action ShowBookmarks<CR>
-map <leader>fyy    :action CopyPaths<CR>
-map <leader>fyr    :action CopyReference<CR>
-map <leader>ft    :action ActivateProjectToolWindow<CR>
-map <leader>fn    :action NewClass<CR>
 map <leader>fN    :action NewElement<CR>
-map <leader>fi      :action OptimizeImports<CR>
 
 " g - git
 map <leader>gb    :action Git.Branches<CR>
-map <leader>gG    :action ActivateVersionControlToolWindow<CR>
-map <leader>gg    :action Vcs.QuickListPopupAction<CR>
 map <leader>gp    :action Vcs.Push<cr>
-map <leader>gS    :action Vcs.Show.Shelf<CR>
 map <leader>gc    :action Git.CompareWithBranch<CR>
 map <leader>gh    :action Vcs.ShowTabbedFileHistory<CR>
 map <leader>gs    :action Vcs.Show.Local.Changes<CR>
@@ -137,32 +100,37 @@ map <leader>hc      :action CallHierarchy<CR>
 map <leader>ht      :action TypeHierarchy<CR>
 
 " j - jump
-map <leader>jc    :action GotoClass<CR>
-map <leader>js    :action FileStructurePopup<CR>
-map <leader>jn    :action MethodDown<cr>
-map <leader>jp    :action MethodUp<cr>
 map <Leader>jm    vat<Esc>
 map <Leader>jM    vato<Esc>
 map <Leader>jj    :action AceLineAction<CR>
 map <Leader>jf    :action AceAction<CR>
-map <Leader>jw    :action AceWordAction<CR>
+map <Leader>jw    :action AceWordForwardAction<CR>
+map <Leader>jb    :action AceWordBackwardsAction<CR>
 
 " m - localleader
 map <leader>mf    :action ReformatCode<CR>
+map <leader>mx    :action ShowErrorDescription<CR>
+map <leader>m' :action :cursive.repl.actions/jump-to-repl<CR>
+map <leader>me :action :cursive.repl.actions/run-top-sexp<CR>
+map <leader>mb :action :cursive.actions.paredit/barf-forwards<CR>
+map <leader>mB :action :cursive.actions.paredit/barf-backwards<CR>
+map <leader>ms :action :cursive.actions.paredit/slurp-forwards<CR>
+map <leader>mS :action :cursive.actions.paredit/slurp-backwards<CR>
+map <leader>mk :action :cursive.actions.paredit/kill-sexp<CR>
+map <leader>mr :action :cursive.actions.paredit/raise<CR>
+map <leader>mj :action :cursive.actions.paredit/join<CR>
+map <leader>mt :action :cursive.actions.paredit/toggle<CR>
+map <leader>ml :action :cursive.repl.actions/load-file<CR>
+
+map <leader>rg    :reg<CR>
+map <Leader>xs :action ConvertIndentsToSpaces<cr>
 
 " n - navigate
-map <leader>ng    :action GotoDeclaration<CR>
-map <leader>ni    :action GotoImplementation<CR>
-map <leader>nt    :action GotoTypeDeclaration<CR>
 map <leader>n[    :action EditorCodeBlockStart<CR>
 map <leader>n]    :action EditorCodeBlockEnd<CR>
 
 " p - projects
-map <leader>pt   :action GotoClass<CR>
-map <leader>ps    :action GotoSymbol<CR>
-map <leader>pf    :action GotoFile<CR>
 map <leader>pc      :action CompileDirty<CR>
-map <leader>pu      :action FindUsages<CR>
 map <leader>po    :action ImportProject<CR>
 map <leader>pi    :action ImportModule<CR>
 map <leader>pm    :action MakeModule<CR>
@@ -170,37 +138,16 @@ map <leader>pI    :action InvalidateCaches<CR>
 map <leader>pp    :action ManageRecentProjects<CR>
 
 " q - quit
-map <leader>qf    :action CloseProject<CR>
 map <leader>qq    :action CloseProject<CR>
 map <leader>qQ    :action Exit<CR>
 map <leader>qs    :action SaveAll<CR>:action CloseProject<CR>
+map <leader>qr    :action IDEARestart<CR>
 
 " r - run / refactoring
 map <leader>rr    :action Run<CR>
 map <leader>rd    :action ChooseRunConfiguration<CR>
-map <leader>rc      :action GenerateConstructor<CR>
-map <leader>rC      :action CodeCleanup<CR>
-map <leader>rm    :action ExtractMethod<CR>
-map <leader>rv    :action IntroduceVariable<CR>
-map <leader>rS    :action ExtractSuperclass<CR>
-map <leader>rs      :action GenerateGetterAndSetter<CR>
-map <leader>rg      :action Generate<CR>
-map <leader>rI      :action ImplementMethods<CR>
-map <leader>ri      :action OptimizeImports<CR>
+map <leader>ri      :action ImplementMethods<CR>
 map <leader>rt      :action Refactorings.QuickListPopupAction<CR>
-map <leader>rR      :action RenameElement<CR>
-
-" R - registers
-map <leader>Re    :reg<CR>
-map <leader>Ry    :action PasteMultiple<CR>
-
-" s - search
-map <leader>sp    :action FindInPath<CR>
-map <leader>sr    :action ReplaceInPath<CR>
-map <leader>sc    :nohlsearch<CR>
-map <leader>sh    :action HighlightUsagesInFile<CR>
-map <leader>su    :action FindUsages<CR>
-map <leader>ss    :action SearchEverywhere<CR>
 
 " t - toggle
 map <leader>ti    :action EditorToggleShowIndentLines<CR>
@@ -209,14 +156,8 @@ map <leader>tn    :action EditorGutterToggleGlobalLineNumbers<CR>
 map <leader>tw    :action EditorToggleShowWhitespaces<CR>
 map <leader>tg    :action EditorToggleShowGutterIcons<CR>
 map <leader>tp    :action TogglePowerSave<CR>
-map <leader>Tt    :action ToggleDistractionFreeMode<CR>
-map <leader>Tp    :action TogglePresentationMode<CR>
-map <leader>TT    :action ChangeView<CR>
-
-" v - view
-map <leader>vi      :action QuickImplementations<CR>
-map <leader>vj      :action QuickJavaDoc<CR>
-map <leader>vu      :action ShowUsages<CR>
+map <leader>tm    :action ChangeView<CR>
+map <leader>ts    :nohlsearch<CR>
 
 " w - window
 map <leader>wv    :action SplitVertically<CR>
@@ -235,19 +176,7 @@ map <leader>wS    :action SplitHorizontally<CR>:action VimWindowDown<CR>
 map <leader>wV    :action SplitVertically<CR>:action VimWindowRight<CR>
 map <leader>ww    :action VimWindowNext<CR>
 
-" x - text
-map <leader>xc     g<C-g>
-map <leader>xd<Space>    wh:action EditorHungryBackSpace<CR>
-map <leader>xJ    $:action MoveLineDown<CR>
-map <leader>xK    $:action MoveLineUp<CR>
-map <leader>xtc    xhP
-map <leader>xtl    ddkP
-map <leader>xU    vU
-map <leader>xu    vu
-map <Leader>xs :action ConvertIndentsToSpaces<cr>
-
 " z - zoom
 map <leader>z+    :action EditorIncreaseFontSize<CR>
 map <leader>z-    :action EditorDecreaseFontSize<CR>
 map <leader>z0    :action EditorResetFontSize<CR>
-
