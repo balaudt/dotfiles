@@ -12,7 +12,7 @@ values."
    ;; or `spacemacs'. (default 'spacemacs)
    dotspacemacs-distribution 'spacemacs
    ;; Lazy installation of layers (i.e. layers are installed only when a file
-   ;; with a supported type is opened). Possible values are `all', `unused'
+   ;; with a supported type is ). Possible values are `all', `unused'
    ;; and `nil'. `unused' will lazy install only unused layers (i.e. layers
    ;; not listed in variable `dotspacemacs-configuration-layers'), `all' will
    ;; lazy install any layer that support lazy installation even the layers
@@ -30,57 +30,45 @@ values."
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(restclient
-     javascript
-     clojure
+   '(sql
+     ruby
+     csv
      yaml
-     python
      html
-     vimscript
-     sql
+     javascript
+     markdown
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     helm
-     auto-completion
+     ivy
+     ;; auto-completion
      ;; better-defaults
      emacs-lisp
      git
-     markdown
-     org
-     (shell :variables
-             shell-default-height 30
-             shell-default-position 'bottom)
-      spell-checking
-      syntax-checking
-      version-control
-     (ranger :variables
-             ranger-show-preview t)
-     vinegar
+     auto-completion
+     clojure
+     go
+     ;; markdown
+     (org :variables
+          org-enable-org-journal-support t)
      osx
-     scala
-     tabbar
-     fasd
-     journal
-     pdf
-     ;(java :variables java-backend 'eclim
-     ;      eclim-eclipse-dirs '("/Applications/Eclipse.app/Contents/Eclipse/")
-     ;      eclimd-executable "/Applications/Eclipse.app/Contents/Eclipse/eclimd")
+     ;; (shell :variables
+     ;;        shell-default-height 30
+     ;;        shell-default-position 'bottom)
+     ;; spell-checking
+     ;; syntax-checking
+     ;; version-control
+     gtags
+     vinegar
+     shell
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(
-                                      org-cliplink
-                                      org-brain
-                                      prettier-js
-                                      (sunrise-commander :location (recipe :fetcher github :repo "escherdragon/sunrise-commander"))
-                                      calfw
-                                      helm-dash
-                                      )
+   dotspacemacs-additional-packages '(crux)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -92,8 +80,7 @@ values."
    ;; `used-but-keep-unused' installs only the used packages but won't uninstall
    ;; them if they become unused. `all' installs *all* packages supported by
    ;; Spacemacs and never uninstall them. (default is `used-only')
-   dotspacemacs-install-packages 'used-only
-   ))
+   dotspacemacs-install-packages 'used-only))
 
 (defun dotspacemacs/init ()
   "Initialization function.
@@ -137,20 +124,19 @@ values."
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
-   dotspacemacs-startup-banner 'nil
+   dotspacemacs-startup-banner 'official
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
    ;; Possible values for list-type are:
    ;; `recents' `bookmarks' `projects' `agenda' `todos'."
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
-   dotspacemacs-startup-lists '((recents . 10)
-                                (projects . 10)
-                                (bookmarks . 10))
+   dotspacemacs-startup-lists '((recents . 5)
+                                (projects . 7))
    ;; True if the home buffer should respond to resize events.
    dotspacemacs-startup-buffer-responsive t
    ;; Default major mode of the scratch buffer (default `text-mode')
-   dotspacemacs-scratch-mode 'org-mode
+   dotspacemacs-scratch-mode 'text-mode
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
@@ -176,7 +162,7 @@ values."
    dotspacemacs-emacs-leader-key "M-m"
    ;; Major mode leader key is a shortcut key which is the equivalent of
    ;; pressing `<leader> m`. Set it to `nil` to disable it. (default ",")
-   dotspacemacs-major-mode-leader-key ","
+   dotspacemacs-major-mode-leader-key "\\"
    ;; Major mode leader key accessible in `emacs state' and `insert state'.
    ;; (default "C-M-m")
    dotspacemacs-major-mode-emacs-leader-key "C-M-m"
@@ -186,7 +172,7 @@ values."
    ;; and TAB or <C-m> and RET.
    ;; In the terminal, these pairs are generally indistinguishable, so this only
    ;; works in the GUI. (default nil)
-   dotspacemacs-distinguish-gui-tab t
+   dotspacemacs-distinguish-gui-tab nil
    ;; If non nil `Y' is remapped to `y$' in Evil states. (default nil)
    dotspacemacs-remap-Y-to-y$ nil
    ;; If non-nil, the shift mappings `<' and `>' retain visual state if used
@@ -209,7 +195,7 @@ values."
    ;; Size (in MB) above which spacemacs will prompt to open the large file
    ;; literally to avoid performance issues. Opening a file literally means that
    ;; no major mode or minor modes are active. (default is 1)
-   dotspacemacs-large-file-size 10
+   dotspacemacs-large-file-size 1
    ;; Location where to auto-save files. Possible values are `original' to
    ;; auto-save the file in-place, `cache' to auto-save the file to another
    ;; file stored in the cache directory and `nil' to disable auto-saving.
@@ -254,7 +240,7 @@ values."
    ;; If non nil the frame is maximized when Emacs starts up.
    ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
    ;; (default nil) (Emacs 24.4+ only)
-   dotspacemacs-maximized-at-startup t
+   dotspacemacs-maximized-at-startup nil
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
@@ -303,7 +289,7 @@ values."
    dotspacemacs-highlight-delimiters 'all
    ;; If non nil, advise quit functions to keep server open when quitting.
    ;; (default nil)
-   dotspacemacs-persistent-server t
+   dotspacemacs-persistent-server nil
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
    ;; (default '("ag" "pt" "ack" "grep"))
@@ -327,10 +313,6 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
-  (setq tramp-ssh-controlmaster-options
-        "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
-
-  (server-start)
   )
 
 (defun dotspacemacs/user-config ()
@@ -340,69 +322,38 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-  (spacemacs/set-leader-keys "on" 'tabbar-forward-group)
-  (spacemacs/set-leader-keys "op" 'tabbar-backward-group)
-  (spacemacs/set-leader-keys "fH" 'eww-open-file)
-  (spacemacs/set-leader-keys "tw" 'visual-line-mode)
-  (spacemacs/set-leader-keys "tW" 'whitespace-mode)
-  (spacemacs/set-leader-keys "js" 'helm-imenu)
-  (spacemacs/set-leader-keys "ae" 'eshell)
+  (setq org-directory '("~/Dropbox/org/")
+        org-journal-file-type 'monthly
+        org-journal-dir "~/Documents/journal")
+  (setq cider-repl-history-display-duplicates nil
+        cider-repl-history-file "~/.cider-repl-history")
+  (setq ivy-use-virtual-buffers nil)
 
-  (spacemacs/set-leader-keys-for-major-mode 'org-mode "eh" 'org-html-export-to-html)
-  (spacemacs/set-leader-keys-for-major-mode 'org-mode "ic" 'org-cliplink)
-  (spacemacs/set-leader-keys-for-major-mode 'org-mode "-" 'dired-jump)
-  (spacemacs/set-leader-keys-for-major-mode 'org-mode "xl" 'org-toggle-latex-fragment)
-  (setq org-directory '("~/Dropbox/org"))
-  (setq org-agenda-files '("~/Dropbox/org"))
-  (setq org-refile-targets '((org-agenda-files :maxlevel . 4)))
+  (spacemacs/set-leader-keys
+    "'" 'eshell
+    "ol" 'list-packages
+    "bo" 'spacemacs/kill-other-buffers
+    "jj" 'avy-goto-line-below
+    "jk" 'avy-goto-line-above
+    "jw" 'avy-goto-word-1-below
+    "jb" 'avy-goto-word-1-above
+    "jf" 'avy-goto-char
+    "tw" 'visual-line-mode
+    "thm" 'evil-visual-mark-mode)
 
-  (global-set-key (kbd "H-{") 'tabbar-backward-tab)
-  (global-set-key (kbd "H-}") 'tabbar-forward-tab)
-  (global-set-key (kbd "H-<left>") 'beginning-of-line)
-  (global-set-key (kbd "H-<right>") 'end-of-line)
-  (global-set-key (kbd "H-k") 'spacemacs/kill-this-buffer)
-  (global-set-key (kbd "H-K") 'spacemacs/kill-other-buffers)
+
+  (spacemacs/set-leader-keys-for-major-mode 'cider-repl-mode
+    "sC" 'cider-repl-clear-buffer
+    "sh" 'cider-repl-history)
+
+  (spacemacs/set-leader-keys-for-major-mode 'dired-mode
+    "o" 'crux-open-with)
+
+  (global-set-key (kbd "H-w") 'spacemacs/kill-this-buffer)
+  (global-set-key (kbd "H-W") 'kill-buffer-and-window)
   (global-set-key (kbd "H-t") 'spacemacs/new-empty-buffer)
   (global-set-key (kbd "C-]") 'dumb-jump-go)
-  (global-set-key (kbd "<C-tab>") 'helm-buffers-list)
-  (global-set-key (kbd "H-e") 'helm-recentf)
-  (define-key evil-normal-state-map "gt" 'tabbar-forward-tab)
-  (define-key evil-normal-state-map "gT" 'tabbar-backward-tab)
-  (define-key evil-normal-state-map (kbd "C-]") 'dumb-jump-go)
-  (define-key evil-insert-state-map (kbd "M-RET") 'org-meta-return)
-  (define-key evil-hybrid-state-map (kbd "M-RET") 'org-meta-return)
-  (global-linum-mode t)
-  (defun find-git-dir (dir)
-    "Search up the directory tree looking for a .git folder."
-    (cond
-     ((eq major-mode 'dired-mode) "Dired")
-     ((not dir) "process")
-     ((string= dir "/") "no-git")
-     ((file-exists-p (concat dir "/.git")) dir)
-     (t (find-git-dir (directory-file-name (file-name-directory dir))))))
-  (defun git-tabbar-buffer-groups ()
-    "Groups tabs in tabbar-mode by the git repository they are in."
-    (list (find-git-dir (buffer-file-name (current-buffer)))))
-  (setq tabbar-buffer-groups-function 'git-tabbar-buffer-groups)
-
-  (require 'calfw)
-  (semantic-mode)
-
-  (use-package org-brain :ensure t
-    :init
-    (setq org-brain-path "~/Dropbox/brain/")
-    (with-eval-after-load 'evil
-      (evil-set-initial-state 'org-brain-visualize-mode 'emacs))
-    :config
-    (setq org-id-track-globally t)
-    (setq org-id-locations-file "~/Dropbox/.brain-ids"))
-
-  (setq spacemacs-useful-buffers-regexp '("\\*\\(ansi-term\\|eshell\\|shell\\|terminal.+\\)\\(-[0-9]+\\)?\\*" "\\*scratch\\*"))
-  (setq spacemacs-useless-buffers-regexp '("*.+"))
-  (setq helm-boring-buffer-regexp-list '("*.+"))
-
-  (setq projectile-switch-project-action 'projectile-dired)
-  )
+  (define-key evil-normal-state-map (kbd "C-]") 'dumb-jump-go))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
@@ -411,27 +362,17 @@ you should place your code here."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(evil-escape-delay 0.5)
  '(package-selected-packages
    (quote
-    (treepy graphql prettier-js sesman sunrise-commander web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor js2-mode js-doc company-tern tern coffee-mode org-brain pdf-tools tablist org-cliplink clojure-snippets clj-refactor inflections edn multiple-cursors paredit peg cider-eval-sexp-fu cider seq queue clojure-mode org-wiki yaml-mode yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode dash-functional helm-pydoc cython-mode company-anaconda anaconda-mode pythonic org-journal fasd xterm-color shell-pop multi-term git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck eshell-z eshell-prompt-extras esh-help diff-hl auto-dictionary web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data vimrc-mode dactyl-mode tabbar smeargle orgit noflet mmm-mode markdown-toc markdown-mode magit-gitflow helm-gitignore helm-company helm-c-yasnippet gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy evil-magit magit magit-popup git-commit ghub let-alist with-editor ensime sbt-mode scala-mode company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download htmlize gnuplot sql-indent ranger solarized-theme ws-butler winum volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg eval-sexp-fu highlight elisp-slime-nav dumb-jump diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed ace-link ace-jump-helm-line helm helm-core popup which-key undo-tree org-plus-contrib hydra evil-unimpaired f s dash async aggressive-indent adaptive-wrap ace-window avy)))
- '(spacemacs-large-file-modes-list
-   (quote
-    (archive-mode tar-mode jka-compr git-commit-mode image-mode doc-view-mode doc-view-mode-maybe ebrowse-tree-mode pdf-view-mode tags-table-mode)))
- '(tabbar-separator (quote (0.5))))
+    (helm-themes helm-swoop helm-projectile helm-mode-manager helm-flx helm-descbinds helm-ag ace-jump-helm-line helm helm-core markdown-toc mmm-mode markdown-mode gh-md fuzzy company-statistics company-go company clojure-snippets auto-yasnippet ac-ispell auto-complete go-guru go-eldoc go-mode reveal-in-osx-finder pbcopy osx-trash osx-dictionary org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download launchctl htmlize gnuplot clj-refactor inflections multiple-cursors paredit yasnippet cider-eval-sexp-fu cider sesman queue parseedn clojure-mode parseclj a smeargle orgit magit-gitflow magit-popup gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit git-commit with-editor transient ws-butler winum which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra indent-guide hydra lv hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-make google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired f evil-tutor evil-surround evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu elisp-slime-nav dumb-jump popup dash s diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed async aggressive-indent adaptive-wrap ace-window ace-link avy)))
+ '(safe-local-variable-values (quote ((eval progn (pp-buffer) (indent-buffer)))))
+ '(cider-clojure-cli-global-options "-A:liftoff:dev"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-level-1 ((t (:inherit outline-4 :height 1.0))))
- '(org-level-2 ((t (:inherit outline-4 :height 1.0))))
- '(org-level-3 ((t (:inherit outline-4 :height 1.0))))
- '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
- '(org-level-5 ((t (:inherit outline-4 :height 1.0))))
- '(org-level-6 ((t (:inherit outline-4 :height 1.0))))
- '(org-level-7 ((t (:inherit outline-4 :height 1.0))))
- '(org-level-8 ((t (:inherit outline-4 :height 1.0)))))
+ )
 (defun dotspacemacs/emacs-custom-settings ()
   "Emacs custom settings.
 This is an auto-generated function, do not modify its content directly, use
@@ -442,25 +383,18 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(evil-escape-delay 0.5)
+ '(cider-clojure-cli-global-options "-A:liftoff:dev")
+ '(org-agenda-files (quote ("~/Dropbox/org/inbox.org")))
+ '(org-export-backends (quote (ascii html icalendar latex md odt)))
+ '(org-export-with-sub-superscripts (quote {}))
  '(package-selected-packages
    (quote
-    (helm-dash treepy graphql prettier-js sesman sunrise-commander web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor js2-mode js-doc company-tern tern coffee-mode org-brain pdf-tools tablist org-cliplink clojure-snippets clj-refactor inflections edn multiple-cursors paredit peg cider-eval-sexp-fu cider seq queue clojure-mode org-wiki yaml-mode yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode dash-functional helm-pydoc cython-mode company-anaconda anaconda-mode pythonic org-journal fasd xterm-color shell-pop multi-term git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck eshell-z eshell-prompt-extras esh-help diff-hl auto-dictionary web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data vimrc-mode dactyl-mode tabbar smeargle orgit noflet mmm-mode markdown-toc markdown-mode magit-gitflow helm-gitignore helm-company helm-c-yasnippet gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy evil-magit magit magit-popup git-commit ghub let-alist with-editor ensime sbt-mode scala-mode company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download htmlize gnuplot sql-indent ranger solarized-theme ws-butler winum volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg eval-sexp-fu highlight elisp-slime-nav dumb-jump diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed ace-link ace-jump-helm-line helm helm-core popup which-key undo-tree org-plus-contrib hydra evil-unimpaired f s dash async aggressive-indent adaptive-wrap ace-window avy)))
- '(spacemacs-large-file-modes-list
-   (quote
-    (archive-mode tar-mode jka-compr git-commit-mode image-mode doc-view-mode doc-view-mode-maybe ebrowse-tree-mode pdf-view-mode tags-table-mode)))
- '(tabbar-separator (quote (0.5))))
+    (sqlup-mode sql-indent helm-themes helm-swoop helm-projectile helm-mode-manager helm-flx helm-descbinds helm-ag ace-jump-helm-line helm helm-core markdown-toc mmm-mode markdown-mode gh-md fuzzy company-statistics company-go company clojure-snippets auto-yasnippet ac-ispell auto-complete go-guru go-eldoc go-mode reveal-in-osx-finder pbcopy osx-trash osx-dictionary org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download launchctl htmlize gnuplot clj-refactor inflections multiple-cursors paredit yasnippet cider-eval-sexp-fu cider sesman queue parseedn clojure-mode parseclj a smeargle orgit magit-gitflow magit-popup gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit git-commit with-editor transient ws-butler winum which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra indent-guide hydra lv hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-make google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired f evil-tutor evil-surround evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu elisp-slime-nav dumb-jump popup dash s diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed async aggressive-indent adaptive-wrap ace-window ace-link avy)))
+ '(safe-local-variable-values (quote ((eval progn (pp-buffer) (indent-buffer))))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-level-1 ((t (:inherit outline-4 :height 1.0))))
- '(org-level-2 ((t (:inherit outline-4 :height 1.0))))
- '(org-level-3 ((t (:inherit outline-4 :height 1.0))))
- '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
- '(org-level-5 ((t (:inherit outline-4 :height 1.0))))
- '(org-level-6 ((t (:inherit outline-4 :height 1.0))))
- '(org-level-7 ((t (:inherit outline-4 :height 1.0))))
- '(org-level-8 ((t (:inherit outline-4 :height 1.0)))))
+ )
 )
